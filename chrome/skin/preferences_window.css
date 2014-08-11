@@ -1,0 +1,8 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#HTTP-Archive-Viewer-prefs,
+#HTTP-Archive-Viewer-pane {
+	background-color:	#fff;
+	width:				750px;
+	height:				275px;
+}

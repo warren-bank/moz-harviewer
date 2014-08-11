@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<?xml-stylesheet href="chrome://HTTP-Archive-Viewer/skin/preferences_window.css" type="text/css"?>
+
+<!DOCTYPE prefwindow SYSTEM "chrome://HTTP-Archive-Viewer/locale/preferences_window.dtd">
+
+<prefwindow id="HTTP-Archive-Viewer-prefs"
+	type="prefwindow"
+	windowtype="Browser:Preferences"
+	title="&prefwindow.HTTP_Archive_Viewer.title.window;"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	onload="HTTP_Archive_Viewer_prefwindow.onload()"
+	ondialogaccept="return HTTP_Archive_Viewer_prefwindow.ondialogaccept()"
+	>
+
+	<prefpane id="HTTP-Archive-Viewer-pane" label="&prefwindow.HTTP_Archive_Viewer.title.pane;">
+		<preferences>
+			<preference id="validate_json"       name="extensions.HTTP_Archive_Viewer.validate_json"     type="bool"/>
+			<preference id="show_timeline"       name="extensions.HTTP_Archive_Viewer.show_timeline"     type="bool"/>
+			<preference id="show_stats"          name="extensions.HTTP_Archive_Viewer.show_stats"        type="bool"/>
+			<preference id="expand_all_pages"    name="extensions.HTTP_Archive_Viewer.expand_all_pages"  type="bool"/>
+			<preference id="expand_first_page"   name="extensions.HTTP_Archive_Viewer.expand_first_page" type="bool"/>
+
+			<!--
+			<preference id="visible_columns"     name="extensions.HTTP_Archive_Viewer.request_list.visible_columns"     type="string"/>
+			-->
+
+			<preference id="phase_interval"      name="extensions.HTTP_Archive_Viewer.request_list.phase_interval"      type="int"/>
+			<preference id="html_preview_height" name="extensions.HTTP_Archive_Viewer.request_body.html_preview_height" type="int"/>
+		</preferences>
+
+		<hbox width="750">
+
+			<vbox align="left" width="250">
+				<label value="&prefwindow.HTTP_Archive_Viewer.heading.page_init_defaults;: "/>
+				<separator class="thin"/>
+
+				<checkbox preference="validate_json"      label="&prefwindow.HTTP_Archive_Viewer.label.validate_json;"/>
+				<checkbox preference="show_timeline"      label="&prefwindow.HTTP_Archive_Viewer.label.show_timeline;"/>
+				<checkbox preference="show_stats"         label="&prefwindow.HTTP_Archive_Viewer.label.show_stats;"/>
+				<checkbox preference="expand_all_pages"   label="&prefwindow.HTTP_Archive_Viewer.label.expand_all_pages;"/>
+				<checkbox preference="expand_first_page"  label="&prefwindow.HTTP_Archive_Viewer.label.expand_first_page;"/>
+			</vbox>		
+
+			<vbox align="left" width="250">
+				<label value="&prefwindow.HTTP_Archive_Viewer.heading.request_list;: "/>
+				<separator class="thin"/>
+
+				<listbox id="visible_columns" rows="6" seltype="multiple">
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.url;"      value="url"/>
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.status;"   value="status"/>
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.type;"     value="type"/>
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.domain;"   value="domain"/>
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.size;"     value="size"/>
+					<listitem label="&prefwindow.HTTP_Archive_Viewer.listitem.visible_columns.timeline;" value="timeline"/>
+				</listbox>
+				<separator class="thin"/>
+
+				<label value="&prefwindow.HTTP_Archive_Viewer.label.request_list.phase_interval;: "/>
+				<textbox preference="phase_interval"      type="number" min="1000" max="60000" decimalplaces="0" hidespinbuttons="true" />
+			</vbox>
+
+			<vbox align="left" width="250">
+				<label value="&prefwindow.HTTP_Archive_Viewer.heading.request_body;: "/>
+				<separator class="thin"/>
+
+				<label value="&prefwindow.HTTP_Archive_Viewer.label.request_body.html_preview_height;: "/>
+				<textbox preference="html_preview_height" type="number" min="0" max="10000" decimalplaces="0" hidespinbuttons="true" />
+			</vbox>
+
+		</hbox>
+
+	</prefpane>
+
+	<script type="application/x-javascript" src="chrome://HTTP-Archive-Viewer/content/preferences_window.js" />
+
+</prefwindow>
