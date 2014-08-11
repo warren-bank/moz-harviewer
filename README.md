@@ -161,6 +161,14 @@ Height of HTML Preview Panel (px) | <sub>100</sub>
 
     >>     ex: [http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=1#HTTP-Archive-Viewer/No-JSON-DataView](http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=1#HTTP-Archive-Viewer/No-JSON-DataView)
 
+    >>   * save the data to a file on disk.
+           Be sure to give its filename a `.har` extension;
+           this will be necessary for the file to pass the 'detection methodology' when loaded.
+           Load the local file into the browser, either via drag/drop or a URI using the `file:` protocol.
+           The browser will (should) load the file using a `text/plain` MIME-type.
+           The JSON viewer add-on won't detect that the file contains JSON.
+           This add-on will detect that the file contains HAR-formatted JSON data.
+
     >>   * temporarily disable the JSON viewer add-on, which requires that the browser be restarted.
 
 ## Great Video
