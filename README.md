@@ -7,7 +7,23 @@ Firefox add-on that displays HTTP Archive data in .HAR format
 
 ## Summary
 
-  * based on: [HAR Viewer](https://github.com/janodvarko/harviewer/tree/22c7b7b21c1db0f80ebcf8955ceea56b316ddde3/webapp/scripts)
+  * based on: [HAR Viewer](https://github.com/janodvarko/harviewer)
+
+    > notes:
+    > * The derivative code contained in this branch (_master_) is prepared for inclusion within the add-on.
+        It has been minified.
+        Though this is appropriate for the codebase belonging strictly to the development of the add-on,
+        it loses fidelity and obfuscates the changes made to _harviewer_.
+    > * To have the best of both worlds, a separate branch [(_libs/harviewer_)](https://github.com/warren-bank/moz-harviewer/tree/libs/harviewer) has been added to this repository that tracks all of the changes made to _harviewer_.
+    > * The first commit to that branch (_libs/harviewer_) is a mirror of two directories that were taken from a checkout of the [source repository](https://github.com/janodvarko/harviewer/tree/22c7b7b21c1db0f80ebcf8955ceea56b316ddde3);
+        any individual file can be easily validated between repositories by comparing its SHA-1 hash in both locations.
+    > * Subsequent commits to that branch (_libs/harviewer_) can be diff'ed against the earlier commit, which serves as a baseline, to see exactly what has been modified.
+    > * The _RequireJS Optimizer_ [build config file](https://github.com/warren-bank/moz-harviewer/blob/libs/harviewer/scripts/app.build.js) is included;
+        it would be very easy to validate that the [minified script](https://github.com/warren-bank/moz-harviewer/blob/master/chrome/skin/preview/scripts/harViewer.min.js) used by the add-on,
+        the version that is included in this branch (_master_),
+        is safe by running the _RequireJS Optimizer_ yourself and comparing output.
+
+    >   <sub>actually.. if anyone does perform this comparison, you'll notice that the license comments differ slightly. A few manual edits were done post-optimizer (in the current release).</sub>
 
 ## Comments
 
