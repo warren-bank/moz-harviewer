@@ -4,13 +4,13 @@ require.def("preview/requestBody", [
     "domplate/domplate",
     "i18n!nls/requestBody",
     "core/lib",
-    "core/cookies",
+//	"core/cookies",
     "domplate/tabView",
     "core/dragdrop",
     "syntax-highlighter/shCore"
 ],
 
-function(Domplate, Strings, Lib, Cookies, TabView, DragDrop, dp) { with (Domplate) {
+function(Domplate, Strings, Lib, /* Cookies, */ TabView, DragDrop, dp) { with (Domplate) {
 
 //*************************************************************************************************
 // Request Body
@@ -396,9 +396,11 @@ HtmlTab.prototype = domplate(HeadersTab.prototype,
     {
         this.preview = Lib.getElementByClass(body, "netInfoHtmlPreview");
 
-        var height = parseInt(Cookies.getCookie("htmlPreviewHeight"));
-        if (!isNaN(height))
-            this.preview.style.height = height + "px";
+		if (user_prefs && user_prefs.request_body && user_prefs.request_body.html_preview_height){
+			var height = parseInt(user_prefs.request_body.html_preview_height, 10);
+			if (!isNaN(height))
+				this.preview.style.height = height + "px";
+		}
 
         var handler = Lib.getElementByClass(body, "htmlPreviewResizer");
         this.resizer = new DragDrop.Tracker(handler, {
@@ -426,7 +428,7 @@ HtmlTab.prototype = domplate(HeadersTab.prototype,
     {
         var newHeight = (this.startHeight + newPos.y);
         this.preview.style.height = newHeight + "px";
-        Cookies.setCookie("htmlPreviewHeight", newHeight);
+        user_prefs.request_body.html_preview_height = newHeight;
     },
 
     onDrop: function(tracker)

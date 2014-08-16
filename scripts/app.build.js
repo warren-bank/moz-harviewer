@@ -1,43 +1,41 @@
-({
-    appDir: "../",
-
-    baseUrl: "scripts/",
-
-    dir: "../../webapp-build",
-
-    // Comment out the optimize line if you want
-    // the code minified by Closure Compiler using
-    // the "simple" optimizations mode
-    //optimize: "simple",
-
-    optimizeCss: "standard",
-
-    modules: [
-        {
-            name: "harViewer",
-            include: [
-                "nls/harViewer",
-                "nls/homeTab",
-                "nls/pageStats",
-                "nls/previewTab",
-                "nls/requestBody",
-                "nls/requestList"
-            ],
-            excludeShallow: [
-                "domplate/domplate",
-                "core/trace"
-            ]
-        },
-        {
-            name: "harPreview",
-            include: [
-                "nls/requestBody",
-                "nls/requestList"
-            ],
-            excludeShallow: [
-                "domplate/domplate",
-                "core/trace"
-            ]
-        }
-    ]
-})
+{
+	baseUrl: ".",
+	locale: "en-us",
+	optimize: "uglify",
+	wrap: true,
+	insertRequire: ["harViewer"],
+	name: "almond",
+	include: [
+		"i18n",
+		"harViewer",
+		"jquery-plugins/jquery.json",
+		"nls/harModel",
+		"nls/pageList",
+		"nls/pageStats",
+		"nls/pageTimeline",
+		"nls/previewTab",
+		"nls/requestBody",
+		"nls/requestList",
+		"core/lib",
+		"core/trace",
+		"core/dragdrop",
+		"domplate/domplate",
+		"domplate/infoTip",
+		"domplate/popupMenu",
+		"domplate/tabView",
+		"domplate/toolbar",
+		"preview/harModel",
+		"preview/harSchema",
+		"preview/jsonSchema",
+		"preview/pageList",
+		"preview/ref",
+		"preview/requestBody",
+		"preview/requestList",
+		"preview/validationError",
+		"syntax-highlighter/shCore",
+		"tabs/pageStats",
+		"tabs/pageTimeline",
+		"tabs/previewTab"
+	],
+	out: "../harViewer.min.js"
+}

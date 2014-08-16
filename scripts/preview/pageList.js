@@ -4,13 +4,13 @@ require.def("preview/pageList", [
     "domplate/domplate",
     "core/lib",
     "core/trace",
-    "core/cookies",
+//	"core/cookies",
     "preview/requestList",
     "i18n!nls/pageList",
     "domplate/popupMenu"
 ],
 
-function(Domplate, Lib, Trace, Cookies, RequestList, Strings, Menu) {
+function(Domplate, Lib, Trace, /* Cookies, */ RequestList, Strings, Menu) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -276,10 +276,18 @@ PageList.prototype = domplate(
             if (pageRows.length == 1 && pageTables.length == 1)
                 this.toggleRow(pageRows[0]);
 
+		/*
             // If 'expand' parameter is specified expand all by default.
             var expand = Lib.getURLParameter("expand");
             if (expand)
                 this.expandAll(table);
+		*/
+			if (user_prefs.expand_all_pages){
+                this.expandAll(table);
+			}
+			else if (user_prefs.expand_first_page && pageRows.length){
+                this.toggleRow(pageRows[0], true);
+			}
         }
     },
 

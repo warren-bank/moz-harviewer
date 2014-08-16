@@ -5,13 +5,13 @@ require.def("preview/requestList", [
     "core/lib",
     "i18n!nls/requestList",
     "preview/harModel",
-    "core/cookies",
+//	"core/cookies",
     "preview/requestBody",
     "domplate/infoTip",
     "domplate/popupMenu"
 ],
 
-function(Domplate, Lib, Strings, HarModel, Cookies, RequestBody, InfoTip, Menu) {
+function(Domplate, Lib, Strings, HarModel, /* Cookies, */ RequestBody, InfoTip, Menu) {
 with (Domplate) {
 
 // ********************************************************************************************* //
@@ -72,14 +72,11 @@ RequestList.defaultColumns = [
  */
 RequestList.getVisibleColumns = function()
 {
-    var cols = Cookies.getCookie("previewCols");
-    if (cols)
+    var cols;
+    if (!cols && user_prefs && user_prefs.request_list && user_prefs.request_list.visible_columns)
     {
-        // Columns names are separated by a space so, make sure to properly process
-        // spaces in the cookie value.
-        cols = cols.replace(/\+/g, " ");
-        cols = unescape(cols);
-        return cols.split(" ");
+		cols = user_prefs.request_list.visible_columns;
+        return cols;
     }
 
     if (!cols)
@@ -96,10 +93,12 @@ RequestList.getVisibleColumns = function()
     return Lib.cloneArray(RequestList.defaultColumns);
 }
 
-RequestList.setVisibleColumns = function(cols, avoidCookies)
+RequestList.setVisibleColumns = function(cols)
 {
     if (!cols)
         cols = RequestList.getVisibleColumns();
+
+	user_prefs.request_list.visible_columns = cols;
 
     // If the parameter is an array, convert it to string.
     if (cols.join)
@@ -108,10 +107,6 @@ RequestList.setVisibleColumns = function(cols, avoidCookies)
     var content = document.getElementById("content");
     if (content)
         content.setAttribute("previewCols", cols);
-
-    // Update cookie
-    if (!avoidCookies)
-        Cookies.setCookie("previewCols", cols);
 }
 
 // Initialize UI. List of columns is specified on the content element (used by CSS).
@@ -465,7 +460,9 @@ RequestList.prototype = domplate(
         this.phases = [];
 
         // The phase interval is customizable through a cookie.
-        var phaseInterval = Cookies.getCookie("phaseInterval");
+        var phaseInterval;
+		if (!phaseInterval && user_prefs && user_prefs.request_list && user_prefs.request_list.phase_interval)
+			phaseInterval = user_prefs.request_list.phase_interval;
         if (!phaseInterval)
             phaseInterval = 4000;
 

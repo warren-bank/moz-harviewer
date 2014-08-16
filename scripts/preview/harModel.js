@@ -5,13 +5,13 @@ require.def("preview/harModel", [
     "preview/jsonSchema",
     "preview/ref",
     "preview/harSchema",
-    "core/cookies",
+//	"core/cookies",
     "core/trace",
     "i18n!nls/harModel",
     "jquery-plugins/jquery.json"
 ],
 
-function(Lib, JSONSchema, Ref, HarSchema, Cookies, Trace, Strings) {
+function(Lib, JSONSchema, Ref, HarSchema, /* Cookies, */ Trace, Strings) {
 
 //*************************************************************************************************
 // Statistics
@@ -366,8 +366,8 @@ HarModel.Loader =
         document.location = href.substr(0, index) + "?path=" + path;
 
         // Show timeline and stats by default if an example is displayed.
-        Cookies.setCookie("timeline", true);
-        Cookies.setCookie("stats", true);
+		user_prefs.show_timeline = true;
+		user_prefs.show_stats = true;
     },
 
     loadLocalArchive: function(filePath, callback, errorCallback)
@@ -479,7 +479,7 @@ function contentToUnicode()
     newContent.text = Array.map(this.text, function(x) {
         var charCode = x.charCodeAt(0);
         if ((charCode >= 0x20 && charCode < 0x7F) ||
-             charCode == 0xA || charCode == 0xD)
+             charCode == 0x9 || charCode == 0xA || charCode == 0xD)
             return x.charAt(0);
 
         var unicode = charCode.toString(16).toUpperCase();

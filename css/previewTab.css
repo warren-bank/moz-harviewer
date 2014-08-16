@@ -1,17 +1,25 @@
-/* See license.txt for terms of usage */
+.harDownloadButton,
+.harSaveButton {
+	display:				inline-block;
+	width:					16px;
+	height:					16px;
 
-/*************************************************************************************************/
-/* Preview */
+	background-color:		transparent;
+	background-repeat:		no-repeat;
+	background-position:	0px 0px;
 
-/*************************************************************************************************/
-/* Toolbar */
+	/* Remove the dotted outline when focused */
+	outline:				none;
+	-moz-user-focus:		ignore;
+}
 
-/* Remove the dotted outline when focused */
-.harDownloadButton OBJECT {
-    outline: none;
-    -moz-user-focus: ignore;
+.harDownloadButton {
+	background-image:		url("images/download-sprites.png");
+}
+.harDownloadButton:hover {
+	background-position:	0px -16px;;
 }
 
 .harSaveButton {
-    background: url(images/save.png) no-repeat;
+	background-image:		url("images/save.png");
 }

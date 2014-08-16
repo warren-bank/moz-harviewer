@@ -1,10 +1,6 @@
-# [HAR Viewer](https://github.com/janodvarko/harviewer)
+# tracking modifications to: [HAR Viewer](https://github.com/janodvarko/harviewer)
 
-* Author: Jan Odvarko, odvarko@gmail.com,
-* http://www.softwareishard.com/
-* Home page: http://www.janodvarko.cz/har/viewer
-* Issue list: http://code.google.com/p/harviewer/issues/list
-* Project home: http://code.google.com/p/harviewer/
+* Author: [Jan Odvarko](http://www.softwareishard.com/blog/har-viewer/)
 
 ## Unmodified/Original Source
 
@@ -12,9 +8,86 @@
 
 ## Change/Commit Log
 
-  * __HEAD__:
+  * [375fc21](https://github.com/warren-bank/moz-harviewer/commit/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8):
     * mirror of the following directories taken from the _Unmodified/Original Source_:
       * [webapp/css](https://github.com/janodvarko/harviewer/tree/22c7b7b21c1db0f80ebcf8955ceea56b316ddde3/webapp/css)
       * [webapp/scripts](https://github.com/janodvarko/harviewer/tree/22c7b7b21c1db0f80ebcf8955ceea56b316ddde3/webapp/scripts)
 
+    * SHA-1 hash value comparison:
+        * _Unmodified/Original Source_:
+          * [webapp](https://api.github.com/repos/janodvarko/harviewer/contents/webapp?ref=22c7b7b21c1db0f80ebcf8955ceea56b316ddde3) tree object:
+
+            path | sha
+            ---- | ---
+            [webapp/css](https://api.github.com/repos/janodvarko/harviewer/contents/webapp/css?ref=22c7b7b21c1db0f80ebcf8955ceea56b316ddde3) | "d9a9e17e5b6092adb2c8dde849b6948720973eda"
+            [webapp/scripts](https://api.github.com/repos/janodvarko/harviewer/contents/webapp/scripts?ref=22c7b7b21c1db0f80ebcf8955ceea56b316ddde3) | "c1934ce91cae5e15eef29e08b57de557c57db7ef"
+
+        * _libs/harviewer_:
+          * [_root_](https://api.github.com/repos/warren-bank/moz-harviewer/contents?ref=375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8) tree object <sub>(ie: `375fc21^{tree}`)</sub>:
+
+            path | sha
+            ---- | ---
+            [css](https://api.github.com/repos/warren-bank/moz-harviewer/contents/css?ref=375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8) | "d9a9e17e5b6092adb2c8dde849b6948720973eda"
+            [scripts](https://api.github.com/repos/warren-bank/moz-harviewer/contents/scripts?ref=375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8) | "c1934ce91cae5e15eef29e08b57de557c57db7ef"
+
+        * result: confirmation that these files are all identical
+
   > this version will serve as the baseline, which future (modified) commits should be diff'ed against
+
+  * [__HEAD__](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...libs/harviewer):
+    * This commit differs from the production code contained in the [tagged release: v1.0.0](https://github.com/warren-bank/moz-harviewer/releases/tag/v1.0.0).
+      A subsequent commit to this branch (labeled: v1.0.0) will be made that will directly correspond to this production code.
+      However, it may be of interest to developers to see where things (both script and css) break when the doctype is removed,
+      and the page is forced to render in quirks mode.
+    * the diff for this commit will reveal the particulars, but high level:
+      * scripts that aren't needed are removed
+      * usage of `scripts/core/cookies.js` to store user preferences is replaced by add-on preferences
+      * `scripts/downloadify/*` (a Flash library used to trigger a save-as dialog for the user to extract/save the HAR data to disk)
+        is removed, and replaced by a pure javascript alternative (in `scripts/tabs/previewTab.js`)
+      * `scripts/app.build.js`, the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html) build config file, is rewritten to combine all of the modules into a single file
+      * `scripts/i18n.js` is replaced with the [latest version](https://github.com/requirejs/i18n/raw/87ce4b30c75fece0aedb5ca0ba1be4194147259d/i18n.js)
+      * `scripts/require.js` is replaced by [Almond](https://github.com/jrburke/almond/raw/36b4b28163c31b699235534686e32d9585d9b826/almond.js),
+        which is a minimal/barebones [AMD module](http://requirejs.org/docs/whyamd.html) loader.
+
+        > issue:
+
+        > * to make this loader compatible with the AMD modules in this project, one additional line of code was necessary: `requirejs.def = define;`
+
+    * adds a `demo` directory, which contains:
+      * `demo/scripts/jquery.min.js`:
+        > minified copy of [jQuery 1.5.1](http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js)
+
+        > (same version as the non-minified copy in the _unmodified/original source_)
+
+      * `demo/scripts/harViewer.min.js`:
+        > the output from the [RequireJS Optimizer](https://github.com/jrburke/r.js):
+
+        >> `cd scripts`
+
+        >> `node /path/to/r.js -o app.build.js optimize=none out="../demo/scripts/harViewer.min.js"`
+
+        > the production version (used in the add-on) is optimized with `uglify`, which minifies the output.
+
+      * `demo/scripts/demo.js`:
+        > contains a static snapshot of the code that is dynamically generated by the add-on:
+
+        > * the source of the HAR data used in this particular example is:
+           [httparchive.org](http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=0)
+
+        >   this is the same HAR data as is shown in the
+            [README screenshot](https://raw.githubusercontent.com/warren-bank/moz-harviewer/screenshots/01.png)
+
+        > * the add-on embeds this code directly within the .html document.
+
+        >   the demo uses an external script file simply for efficiency sake;
+            a single git blob will be shared across all variations of the demo .html files.
+
+      * `demo/index.standards_mode.html`:
+        > a working demo to confirm proper functionality.
+
+        > contains an HTML5 doctype
+
+      * `demo/index.quirks_mode.html`:
+        > identical to `demo/index.standards_mode.html`, with one exception:
+
+        > omits any doctype declaration

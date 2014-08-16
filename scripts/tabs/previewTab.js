@@ -9,13 +9,11 @@ require.def("tabs/previewTab", [
     "tabs/pageTimeline",
     "tabs/pageStats",
     "preview/pageList",
-    "core/cookies",
-    "preview/validationError",
-    "downloadify/js/swfobject",
-    "downloadify/src/downloadify"
+//	"core/cookies",
+    "preview/validationError"
 ],
 
-function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, PageList, Cookies,
+function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, PageList, /* Cookies, */
     ValidationError) {
 
 with (Domplate) {
@@ -68,39 +66,11 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
         // Show timeline & stats by default if the cookie says so (no animation)
         // But there should be an input.
         var input = this.model.input;
-        if (input && Cookies.getCookie("timeline") == "true")
+        if (input && user_prefs.show_timeline)
             this.onTimeline(false);
 
-        if (input && Cookies.getCookie("stats") == "true")
+        if (input && user_prefs.show_stats)
             this.onStats(false);
-
-        this.updateDownloadifyButton();
-    },
-
-    updateDownloadifyButton: function()
-    {
-        // Create download button (using Downloadify)
-        var model = this.model;
-        $(".harDownloadButton").downloadify(
-        {
-            filename: function() {
-                return "netData.har";
-            },
-            data: function() {
-                return model ? model.toJSON() : "";
-            },
-            onComplete: function() {},
-            onCancel: function() {},
-            onError: function() {
-                alert(Strings.downloadError);
-            },
-            swf: "scripts/downloadify/media/downloadify.swf",
-            downloadImage: "css/images/download-sprites.png",
-            width: 16,
-            height: 16,
-            transparent: true,
-            append: false
-        });
     },
 
     getToolbarButtons: function()
@@ -111,29 +81,28 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
                 label: Strings.showTimelineButton,
                 tooltiptext: Strings.showTimelineTooltip,
                 command: Lib.bindFixed(this.onTimeline, this, true)
-            },
-            {
+            }
+          , {
                 id: "showStats",
                 label: Strings.showStatsButton,
                 tooltiptext: Strings.showStatsTooltip,
                 command: Lib.bindFixed(this.onStats, this, true)
-            },
-            {
+            }
+		/*
+          , {
                 id: "clear",
                 label: Strings.clearButton,
                 tooltiptext: Strings.clearTooltip,
                 command: Lib.bindFixed(this.onClear, this)
             }
-        ];
-
-        if ($.browser.mozilla)
-        {
-            buttons.push({
+		*/
+          , {
                 id: "download",
                 tooltiptext: Strings.downloadTooltip,
-                className: "harDownloadButton"
-            });
-        }
+                className: "harDownloadButton",
+                command: Lib.bindFixed(this.onDownload, this)
+            }
+        ];
 
         return buttons;
     },
@@ -155,9 +124,8 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Re-render toolbar to update label.
         this.toolbar.render();
-        this.updateDownloadifyButton();
 
-        Cookies.setCookie("timeline", visible);
+		user_prefs.show_timeline = visible;
     },
 
     onStats: function(animation)
@@ -174,16 +142,233 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Re-render toolbar to update label.
         this.toolbar.render();
-        this.updateDownloadifyButton();
 
-        Cookies.setCookie("stats", visible);
+		user_prefs.show_stats = visible;
     },
 
+/*
     onClear: function()
     {
         var href = document.location.href;
         var index = href.indexOf("?");
         document.location = href.substr(0, index);
+    },
+*/
+
+    onDownload: function()
+    {
+		var model, json_data;
+
+		model		= this.model;
+		json_data	= model ? model.toJSON() : "";
+
+		// $("body").empty().text(json_data); return;
+
+		var Base64, get_filename, uri, downloader;
+
+		// https://developer.mozilla.org/en-US/docs/Web/API/window.btoa#Unicode_Strings
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
+		// http://phpjs.org/functions/base64_encode/
+		// http://phpjs.org/functions/base64_decode/
+		// https://raw.githubusercontent.com/kvz/phpjs/master/functions/url/base64_encode.js
+		// http://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript
+		Base64 = (function() {
+			"use strict";
+
+			var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+			var _utf8_encode = function(string) {
+
+				var utftext = "",
+					c, n;
+
+				string = string.replace(/\r\n/g, "\n");
+
+				for (n = 0; n < string.length; n++) {
+
+					c = string.charCodeAt(n);
+
+					if (c < 128) {
+
+						utftext += String.fromCharCode(c);
+
+					} else if ((c > 127) && (c < 2048)) {
+
+						utftext += String.fromCharCode((c >> 6) | 192);
+						utftext += String.fromCharCode((c & 63) | 128);
+
+					} else {
+
+						utftext += String.fromCharCode((c >> 12) | 224);
+						utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+						utftext += String.fromCharCode((c & 63) | 128);
+
+					}
+
+				}
+
+				return utftext;
+			};
+
+			var _utf8_decode = function(utftext) {
+				var string = "",
+					i = 0,
+					c = 0,
+					c1 = 0,
+					c2 = 0;
+
+				while (i < utftext.length) {
+
+					c = utftext.charCodeAt(i);
+
+					if (c < 128) {
+
+						string += String.fromCharCode(c);
+						i++;
+
+					} else if ((c > 191) && (c < 224)) {
+
+						c1 = utftext.charCodeAt(i + 1);
+						string += String.fromCharCode(((c & 31) << 6) | (c1 & 63));
+						i += 2;
+
+					} else {
+
+						c1 = utftext.charCodeAt(i + 1);
+						c2 = utftext.charCodeAt(i + 2);
+						string += String.fromCharCode(((c & 15) << 12) | ((c1 & 63) << 6) | (c2 & 63));
+						i += 3;
+
+					}
+
+				}
+
+				return string;
+			};
+
+			var _hexEncode = function(input) {
+				var output = '',
+					i;
+
+				for (i = 0; i < input.length; i++) {
+					output += input.charCodeAt(i).toString(16);
+				}
+
+				return output;
+			};
+
+			var _hexDecode = function(input) {
+				var output = '',
+					i;
+
+				if (input.length % 2 > 0) {
+					input = '0' + input;
+				}
+
+				for (i = 0; i < input.length; i = i + 2) {
+					output += String.fromCharCode(parseInt(input.charAt(i) + input.charAt(i + 1), 16));
+				}
+
+				return output;
+			};
+
+			var encode = function(input) {
+				var output = "",
+					chr1, chr2, chr3, enc1, enc2, enc3, enc4, i = 0;
+
+				input = _utf8_encode(input);
+
+				while (i < input.length) {
+
+					chr1 = input.charCodeAt(i++);
+					chr2 = input.charCodeAt(i++);
+					chr3 = input.charCodeAt(i++);
+
+					enc1 = chr1 >> 2;
+					enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+					enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+					enc4 = chr3 & 63;
+
+					if (isNaN(chr2)) {
+						enc3 = enc4 = 64;
+					} else if (isNaN(chr3)) {
+						enc4 = 64;
+					}
+
+					output += _keyStr.charAt(enc1);
+					output += _keyStr.charAt(enc2);
+					output += _keyStr.charAt(enc3);
+					output += _keyStr.charAt(enc4);
+
+				}
+
+				return output;
+			};
+
+			var decode = function(input) {
+				var output = "",
+					chr1, chr2, chr3, enc1, enc2, enc3, enc4, i = 0;
+
+				input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+				while (i < input.length) {
+
+					enc1 = _keyStr.indexOf(input.charAt(i++));
+					enc2 = _keyStr.indexOf(input.charAt(i++));
+					enc3 = _keyStr.indexOf(input.charAt(i++));
+					enc4 = _keyStr.indexOf(input.charAt(i++));
+
+					chr1 = (enc1 << 2) | (enc2 >> 4);
+					chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+					chr3 = ((enc3 & 3) << 6) | enc4;
+
+					output += String.fromCharCode(chr1);
+
+					if (enc3 !== 64) {
+						output += String.fromCharCode(chr2);
+					}
+					if (enc4 !== 64) {
+						output += String.fromCharCode(chr3);
+					}
+
+				}
+
+				return _utf8_decode(output);
+			};
+
+			var decodeToHex = function(input) {
+				return _hexEncode(decode(input));
+			};
+
+			var encodeFromHex = function(input) {
+				return encode(_hexDecode(input));
+			};
+
+			return {
+				'encode': encode,
+				'decode': decode,
+				'decodeToHex': decodeToHex,
+				'encodeFromHex': encodeFromHex
+			};
+		}());
+
+		get_filename		= function(){
+			var fname		= 'data.har';
+			var pathname	= window.location.pathname;
+			var pattern		= /^(?:.*\/)*([^\/]+\.har[p]?)$/i;
+			if (pattern.test(pathname)){
+				fname		= pathname.replace(pattern, '$1');
+			}
+			return fname;
+		};
+
+		uri					= 'data:application/octet-stream;base64,' + Base64.encode(json_data);
+		downloader			= document.createElement("a");
+		downloader.href		= uri;
+		downloader.download	= get_filename();
+		document.body.appendChild(downloader);
+		downloader.click();
+		document.body.removeChild(downloader);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -191,12 +376,12 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     showStats: function(show)
     {
-        Cookies.setCookie("stats", show);
+		user_prefs.show_stats = show;
     },
 
     showTimeline: function(show)
     {
-        Cookies.setCookie("timeline", show);
+		user_prefs.show_timeline = show;
     },
 
     append: function(input)

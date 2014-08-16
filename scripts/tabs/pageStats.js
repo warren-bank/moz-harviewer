@@ -6,12 +6,12 @@ require.def("tabs/pageStats", [
     "i18n!nls/pageStats",
     "preview/harSchema",
     "preview/harModel",
-    "core/cookies",
+//	"core/cookies",
     "domplate/infoTip",
     "core/trace"
 ],
 
-function(Domplate, Lib, Strings, HarSchema, HarModel, Cookies, InfoTip, Trace) { with (Domplate) {
+function(Domplate, Lib, Strings, HarSchema, HarModel, /* Cookies, */ InfoTip, Trace) { with (Domplate) {
 
 //*************************************************************************************************
 // Page Load Statistics

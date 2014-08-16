@@ -2,20 +2,20 @@
 
 require.def("harViewer", [
     "domplate/tabView",
-    "tabs/homeTab",
-    "tabs/aboutTab",
+//	"tabs/homeTab",
+//	"tabs/aboutTab",
     "tabs/previewTab",
-    "tabs/schemaTab",
-    "tabs/domTab",
+//	"tabs/schemaTab",
+//	"tabs/domTab",
     "preview/harModel",
-    "i18n!nls/harViewer",
+//	"i18n!nls/harViewer",
     "preview/requestList",
     "core/lib",
     "core/trace"
 ],
 
-function(TabView, HomeTab, AboutTab, PreviewTab, SchemaTab, DomTab, HarModel,
-    Strings, RequestList, Lib, Trace) {
+function(TabView, /* HomeTab, AboutTab, */ PreviewTab, /* SchemaTab, DomTab, */ HarModel,
+	/* Strings, */ RequestList, Lib, Trace) {
 
 // ********************************************************************************************* //
 // The Application
@@ -28,11 +28,11 @@ function HarView()
     this.model = new HarModel();
 
     // Append tabs
-    this.appendTab(new HomeTab());
+//	this.appendTab(new HomeTab());
     this.appendTab(new PreviewTab(this.model));
-    this.appendTab(new DomTab());
-    this.appendTab(new AboutTab());
-    this.appendTab(new SchemaTab());
+//	this.appendTab(new DomTab());
+//	this.appendTab(new AboutTab());
+//	this.appendTab(new SchemaTab());
 }
 
 /**
@@ -68,6 +68,7 @@ HarView.prototype = Lib.extend(new TabView(),
         this.render(content);
         this.selectTabByName("Home");
 
+	/*
         // Auto load all HAR files specified in the URL.
         var okCallback = Lib.bind(this.appendPreview, this);
         var errorCallback = Lib.bind(this.onLoadError, this);
@@ -78,6 +79,7 @@ HarView.prototype = Lib.extend(new TabView(),
             if (homeTab)
                 homeTab.loadInProgress(true);
         }
+	*/
     },
 
     appendPreview: function(jsonString)
@@ -88,7 +90,7 @@ HarView.prototype = Lib.extend(new TabView(),
 
         try
         {
-            var validate = $("#validate").attr("checked");
+            var validate = user_prefs.validate_json;
             var input = HarModel.parse(jsonString, validate);
             this.model.append(input);
 
