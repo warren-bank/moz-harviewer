@@ -50,6 +50,7 @@ var InfoTip = Lib.extend(
         if (result)
         {
             var htmlElt = infoTip.ownerDocument.documentElement;
+			if (infoTip.ownerDocument.compatMode == 'BackCompat'){htmlElt = infoTip.ownerDocument.body;}
             var panelWidth = htmlElt.clientWidth;
             var panelHeight = htmlElt.clientHeight;
 

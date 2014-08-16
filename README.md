@@ -34,7 +34,7 @@
 
   > this version will serve as the baseline, which future (modified) commits should be diff'ed against
 
-  * [__HEAD__](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...libs/harviewer):
+  * [718c544](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...718c5444a1504462f2a28bca1e4f0082d2831b36):
     * This commit differs from the production code contained in the [tagged release: v1.0.0](https://github.com/warren-bank/moz-harviewer/releases/tag/v1.0.0).
       A subsequent commit to this branch (labeled: v1.0.0) will be made that will directly correspond to this production code.
       However, it may be of interest to developers to see where things (both script and css) break when the doctype is removed,
@@ -91,3 +91,12 @@
         > identical to `demo/index.standards_mode.html`, with one exception:
 
         > omits any doctype declaration
+
+  * [v1.0.0] [__HEAD__](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...libs/harviewer):
+    * This commit corresponds to the [tagged release: v1.0.0](https://github.com/warren-bank/moz-harviewer/releases/tag/v1.0.0)
+    * updates:
+      * `scripts/domplate/infoTip.js` can now properly determine the height of the document when the page is rendered in quirks mode
+      * the `demo` directory contains an additional file:
+        * `demo/css/quirks.css`:
+
+          > css rules to correct for styling issues when the page is rendered in quirks mode

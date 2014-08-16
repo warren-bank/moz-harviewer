@@ -1,0 +1,21 @@
+/*
+ * combat quirksmode:
+ *    https://developer.mozilla.org/en-US/docs/Mozilla_Quirks_Mode_Behavior
+ *    http://mxr.mozilla.org/mozilla-central/source/layout/style/quirk.css
+ */
+
+table,
+table tr,
+table tr td {
+  text-align:   inherit;
+  line-height:  inherit;
+  font-size:    inherit;
+  font-weight:  inherit;
+  font-style:   inherit;
+  font-variant: inherit;
+  white-space:  inherit;
+}
+
+.pieLabel {
+  padding: 1px 0px 1px 10px;
+}
