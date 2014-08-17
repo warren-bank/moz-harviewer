@@ -6,6 +6,14 @@
 
   * [commit SHA-1 hash: 22c7b7b21c1db0f80ebcf8955ceea56b316ddde3, authored on Feb 26 2014](https://github.com/janodvarko/harviewer/tree/22c7b7b21c1db0f80ebcf8955ceea56b316ddde3)
 
+## Demo
+
+  * The content of this demo is described in detail within the _Change/Commit Log_
+  * High-level: it runs the scripts at the HEAD of this branch, using static HAR data
+  * Links:
+      * [rendered in quirks mode](http://warren-bank.github.io/moz-harviewer/demo/index.quirks_mode.html)
+      * [rendered in standards mode](http://warren-bank.github.io/moz-harviewer/demo/index.standards_mode.html)
+
 ## Change/Commit Log
 
   * [375fc21](https://github.com/warren-bank/moz-harviewer/commit/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8):
