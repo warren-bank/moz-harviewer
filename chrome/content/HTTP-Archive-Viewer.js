@@ -123,6 +123,12 @@ if (!HTTP_Archive_Viewer) {
 						},
 						"request_body"		: {
 							"html_preview_height"	: self.prefs.getIntPref("request_body.html_preview_height")
+						},
+						"sanitized_download"	: {
+							"remove_cookies"		: {
+								"whole_header"		: self.prefs.getBoolPref("sanitized_download.remove_cookies.whole_header"),
+								"value_only"		: self.prefs.getBoolPref("sanitized_download.remove_cookies.value_only")
+							}
 						}
 					};
 

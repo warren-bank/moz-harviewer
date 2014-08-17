@@ -106,26 +106,36 @@ Firefox add-on that displays HTTP Archive data in .HAR format
 
   * Initial Settings (applied at page creation):
 
-setting | default value
-------- | -------------
-Validate JSON | <sub>true</sub>
-Show Page Timeline | <sub>true</sub>
-Show Statistics | <sub>true</sub>
-Expand All Pages | <sub>false</sub>
-Expand First Page | <sub>true</sub>
+    setting | default value
+    ------- | -------------
+    Validate JSON | <sub>true</sub>
+    Show Page Timeline | <sub>true</sub>
+    Show Statistics | <sub>true</sub>
+    Expand All Pages | <sub>false</sub>
+    Expand First Page | <sub>true</sub>
 
   * Request List:
 
-setting | default value
-------- | -------------
-Visible Columns | <sub>url,status,size,timeline</sub>
+    setting | default value
+    ------- | -------------
+    Visible Columns | <sub>url,status,size,timeline</sub>
 
   * Request Body:
 
-setting | default value
-------- | -------------
-Phase Interval (ms) | <sub>4000</sub>
-Height of HTML Preview Panel (px) | <sub>100</sub>
+    setting | default value
+    ------- | -------------
+    Phase Interval (ms) | <sub>4000</sub>
+    Height of HTML Preview Panel (px) | <sub>100</sub>
+
+  * Data to be Removed/Filtered from __Sanitized__ (HAR) Downloads:
+
+    * Cookies:
+
+      setting | default value
+      ------- | -------------
+      All Trace of Existence | <sub>false</sub>
+      Only Values | <sub>true</sub>
+
 
 ## Examples
 

@@ -1,5 +1,5 @@
 var HTTP_Archive_Viewer_prefwindow = {
-	"debug"				: true,
+	"debug"				: false,
 	"prefs"				: null,
 
 	"get_prefs"			: function(){
@@ -29,13 +29,13 @@ var HTTP_Archive_Viewer_prefwindow = {
 	},
 
 	// input: array of values to select
-	"write_listbox"		: function(dom_id, selected_values, retail_current_selections){
+	"write_listbox"		: function(dom_id, selected_values, retain_current_selections){
 		var listbox, i, max;
 
 		listbox			= document.getElementById(dom_id);
 		if (! listbox){return false;}
 
-		if (! retail_current_selections){
+		if (! retain_current_selections){
 			listbox.clearSelection();
 		}
 
@@ -48,27 +48,93 @@ var HTTP_Archive_Viewer_prefwindow = {
 		return true;
 	},
 
+	// input:
+	//   - "dom_id" refers to a "radiogroup"
+	//   - "value_to_pref_map" is a hash table.
+	//     keys are radio-button "value" attributes.
+	//     values are strings that can be passed to:
+	//       prefs.setBoolPref()
+	"read_radiogroup"	: function(dom_id, value_to_pref_map){
+		var radiogroup, selected_index, count, i, item, value;
+
+		radiogroup		= document.getElementById(dom_id);
+		if (! radiogroup){return false;}
+
+		selected_index	= radiogroup.selectedIndex;
+		count			= radiogroup.itemCount;
+
+		for (i=0; i<count; i++){
+			item		= radiogroup.getItemAtIndex(i);
+			value		= item.value;
+
+			if (value_to_pref_map[value]){
+				HTTP_Archive_Viewer_prefwindow.prefs.setBoolPref(
+					value_to_pref_map[value],
+					(i === selected_index)
+				);
+			}
+		}
+	},
+
+	// input:
+	//   - "dom_id" refers to a "radiogroup"
+	//   - "mutually_exclusive_prefs" is a hash table.
+	//     keys are radio-button "value" attributes.
+	//     values are boolean; only one (at most) may be true.
+	"write_radiogroup"	: function(dom_id, mutually_exclusive_prefs){
+		var radiogroup, count, i, item, value;
+
+		radiogroup		= document.getElementById(dom_id);
+		if (! radiogroup){return false;}
+
+		count			= radiogroup.itemCount;
+
+		for (i=0; i<count; i++){
+			item		= radiogroup.getItemAtIndex(i);
+			value		= item.value;
+			if ( mutually_exclusive_prefs[value] === true ){
+				radiogroup.selectedIndex	= i;
+				i							= count;
+			}
+		}
+	},
+
 	"onload"			: function(){
 		try {
-
 			HTTP_Archive_Viewer_prefwindow.prefs = HTTP_Archive_Viewer_prefwindow.get_prefs();
 
-			var _old		= {
-				"visible_columns"	: HTTP_Archive_Viewer_prefwindow.prefs.getCharPref('request_list.visible_columns')
+			var tasks = {};
+			tasks['request_list.visible_columns'] = function(){
+				var _old		= {
+					"visible_columns"	: HTTP_Archive_Viewer_prefwindow.prefs.getCharPref('request_list.visible_columns')
+				};
+
+				if (_old.visible_columns){
+					(function(cols_csv){
+						var dom_id, selected_values, retain_current_selections;
+
+						dom_id						= "visible_columns";
+						selected_values				= cols_csv.split(',');
+						retain_current_selections	= false;
+
+						HTTP_Archive_Viewer_prefwindow.write_listbox(dom_id, selected_values, retain_current_selections);
+					})(_old.visible_columns);
+				}
+			};
+			tasks['sanitized_download.remove_cookies'] = function(){
+				var dom_id, mutually_exclusive_prefs;
+
+				dom_id								= "remove_cookies";
+				mutually_exclusive_prefs			= {
+					"whole_header"		: HTTP_Archive_Viewer_prefwindow.prefs.getBoolPref("sanitized_download.remove_cookies.whole_header"),
+					"value_only"		: HTTP_Archive_Viewer_prefwindow.prefs.getBoolPref("sanitized_download.remove_cookies.value_only")
+				};
+
+				HTTP_Archive_Viewer_prefwindow.write_radiogroup(dom_id, mutually_exclusive_prefs);
 			};
 
-			if (_old.visible_columns){
-				(function(cols_csv){
-					var dom_id, selected_values, retail_current_selections;
-
-					dom_id						= "visible_columns";
-					selected_values				= cols_csv.split(',');
-					retail_current_selections	= false;
-
-					HTTP_Archive_Viewer_prefwindow.write_listbox(dom_id, selected_values, retail_current_selections);
-				})(_old.visible_columns);
-			}
-
+			tasks['request_list.visible_columns']();
+			tasks['sanitized_download.remove_cookies']();
 		}
 		catch(e){
 			if (HTTP_Archive_Viewer_prefwindow.debug) {alert(e.message);}
@@ -78,35 +144,52 @@ var HTTP_Archive_Viewer_prefwindow = {
 	"ondialogaccept"	: function(){
 		try {
 
-			var _old		= {
-				"visible_columns"	: HTTP_Archive_Viewer_prefwindow.prefs.getCharPref('request_list.visible_columns')
+			var tasks = {};
+			tasks['request_list.visible_columns'] = function(){
+				var _old		= {
+					"visible_columns"	: HTTP_Archive_Viewer_prefwindow.prefs.getCharPref('request_list.visible_columns')
+				};
+
+				var _new		= {
+					"visible_columns"	: (function(dom_id){
+											var selected_values = HTTP_Archive_Viewer_prefwindow.read_listbox(dom_id);
+											if (selected_values === false){
+												return _old.visible_columns;
+											}
+											else {
+												return selected_values.join(',');
+											}
+										})("visible_columns")
+				};
+
+				var _updated	= {
+					"visible_columns"	: (_old.visible_columns !== _new.visible_columns)
+				};
+
+				if (_updated.visible_columns){
+					HTTP_Archive_Viewer_prefwindow.prefs.setCharPref("request_list.visible_columns", _new.visible_columns);
+				}
+			};
+			tasks['sanitized_download.remove_cookies'] = function(){
+				var dom_id, value_to_pref_map;
+
+				dom_id					= "remove_cookies";
+				value_to_pref_map		= {
+					"whole_header"		: "sanitized_download.remove_cookies.whole_header",
+					"value_only"		: "sanitized_download.remove_cookies.value_only"
+				};
+
+				HTTP_Archive_Viewer_prefwindow.read_radiogroup(dom_id, value_to_pref_map);
 			};
 
-			var _new		= {
-				"visible_columns"	: (function(dom_id){
-										var selected_values = HTTP_Archive_Viewer_prefwindow.read_listbox(dom_id);
-										if (selected_values === false){
-											return _old.visible_columns;
-										}
-										else {
-											return selected_values.join(',');
-										}
-									})("visible_columns")
-			};
-
-			var _updated	= {
-				"visible_columns"	: (_old.visible_columns !== _new.visible_columns)
-			};
-
-			if (_updated.visible_columns){
-				HTTP_Archive_Viewer_prefwindow.prefs.setCharPref("request_list.visible_columns", _new.visible_columns);
-			}
-
-			return true;
-
+			tasks['request_list.visible_columns']();
+			tasks['sanitized_download.remove_cookies']();
 		}
 		catch(e){
 			if (HTTP_Archive_Viewer_prefwindow.debug) {alert(e.message);}
+		}
+		finally {
+			return true;
 		}
 	}
 

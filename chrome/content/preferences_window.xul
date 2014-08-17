@@ -16,24 +16,30 @@
 
 	<prefpane id="HTTP-Archive-Viewer-pane" label="&prefwindow.HTTP_Archive_Viewer.title.pane;">
 		<preferences>
-			<preference id="validate_json"       name="extensions.HTTP_Archive_Viewer.validate_json"     type="bool"/>
-			<preference id="show_timeline"       name="extensions.HTTP_Archive_Viewer.show_timeline"     type="bool"/>
-			<preference id="show_stats"          name="extensions.HTTP_Archive_Viewer.show_stats"        type="bool"/>
-			<preference id="expand_all_pages"    name="extensions.HTTP_Archive_Viewer.expand_all_pages"  type="bool"/>
-			<preference id="expand_first_page"   name="extensions.HTTP_Archive_Viewer.expand_first_page" type="bool"/>
+			<preference id="validate_json"         name="extensions.HTTP_Archive_Viewer.validate_json"     type="bool"/>
+			<preference id="show_timeline"         name="extensions.HTTP_Archive_Viewer.show_timeline"     type="bool"/>
+			<preference id="show_stats"            name="extensions.HTTP_Archive_Viewer.show_stats"        type="bool"/>
+			<preference id="expand_all_pages"      name="extensions.HTTP_Archive_Viewer.expand_all_pages"  type="bool"/>
+			<preference id="expand_first_page"     name="extensions.HTTP_Archive_Viewer.expand_first_page" type="bool"/>
 
 			<!--
-			<preference id="visible_columns"     name="extensions.HTTP_Archive_Viewer.request_list.visible_columns"     type="string"/>
+			<preference id="visible_columns"       name="extensions.HTTP_Archive_Viewer.request_list.visible_columns"                   type="string"/>
 			-->
 
-			<preference id="phase_interval"      name="extensions.HTTP_Archive_Viewer.request_list.phase_interval"      type="int"/>
-			<preference id="html_preview_height" name="extensions.HTTP_Archive_Viewer.request_body.html_preview_height" type="int"/>
+			<preference id="phase_interval"        name="extensions.HTTP_Archive_Viewer.request_list.phase_interval"                    type="int"/>
+			<preference id="html_preview_height"   name="extensions.HTTP_Archive_Viewer.request_body.html_preview_height"               type="int"/>
+
+			<!--
+			<preference id="remove_cookie_headers" name="extensions.HTTP_Archive_Viewer.sanitized_download.remove_cookies.whole_header" type="bool"/>
+			<preference id="remove_cookie_values"  name="extensions.HTTP_Archive_Viewer.sanitized_download.remove_cookies.value_only"   type="bool"/>
+			-->
+
 		</preferences>
 
-		<hbox width="750">
+		<hbox width="500" maxwidth="500">
 
-			<vbox align="left" width="250">
-				<label value="&prefwindow.HTTP_Archive_Viewer.heading.page_init_defaults;: "/>
+			<vbox align="left" width="250" maxwidth="250">
+				<label>&prefwindow.HTTP_Archive_Viewer.heading.page_init_defaults;:</label>
 				<separator class="thin"/>
 
 				<checkbox preference="validate_json"      label="&prefwindow.HTTP_Archive_Viewer.label.validate_json;"/>
@@ -41,10 +47,10 @@
 				<checkbox preference="show_stats"         label="&prefwindow.HTTP_Archive_Viewer.label.show_stats;"/>
 				<checkbox preference="expand_all_pages"   label="&prefwindow.HTTP_Archive_Viewer.label.expand_all_pages;"/>
 				<checkbox preference="expand_first_page"  label="&prefwindow.HTTP_Archive_Viewer.label.expand_first_page;"/>
-			</vbox>		
+			</vbox>
 
-			<vbox align="left" width="250">
-				<label value="&prefwindow.HTTP_Archive_Viewer.heading.request_list;: "/>
+			<vbox align="left" width="250" maxwidth="250">
+				<label>&prefwindow.HTTP_Archive_Viewer.heading.request_list;:</label>
 				<separator class="thin"/>
 
 				<listbox id="visible_columns" rows="6" seltype="multiple">
@@ -57,15 +63,36 @@
 				</listbox>
 				<separator class="thin"/>
 
-				<label value="&prefwindow.HTTP_Archive_Viewer.label.request_list.phase_interval;: "/>
+				<label>&prefwindow.HTTP_Archive_Viewer.label.request_list.phase_interval;:</label>
 				<textbox preference="phase_interval"      type="number" min="1000" max="60000" decimalplaces="0" hidespinbuttons="true" />
 			</vbox>
 
-			<vbox align="left" width="250">
-				<label value="&prefwindow.HTTP_Archive_Viewer.heading.request_body;: "/>
+		</hbox>
+
+		<separator class="groove"/>
+
+		<hbox width="500" maxwidth="500">
+
+			<vbox align="left" width="250" maxwidth="250">
+				<label>&prefwindow.HTTP_Archive_Viewer.heading.sanitized_download;:</label>
 				<separator class="thin"/>
 
-				<label value="&prefwindow.HTTP_Archive_Viewer.label.request_body.html_preview_height;: "/>
+				<groupbox>
+					<caption label="&prefwindow.HTTP_Archive_Viewer.heading.sanitized_download.remove_cookies;"/>
+
+					<radiogroup id="remove_cookies">
+						<radio label="&prefwindow.HTTP_Archive_Viewer.label.sanitized_download.remove_cookies.whole_header;" value="whole_header"/>
+						<radio label="&prefwindow.HTTP_Archive_Viewer.label.sanitized_download.remove_cookies.value_only;"   value="value_only"/>
+					</radiogroup>
+				</groupbox>
+
+			</vbox>
+
+			<vbox align="left" width="250" maxwidth="250">
+				<label>&prefwindow.HTTP_Archive_Viewer.heading.request_body;:</label>
+				<separator class="thin"/>
+
+				<label>&prefwindow.HTTP_Archive_Viewer.label.request_body.html_preview_height;:</label>
 				<textbox preference="html_preview_height" type="number" min="0" max="10000" decimalplaces="0" hidespinbuttons="true" />
 			</vbox>
 
