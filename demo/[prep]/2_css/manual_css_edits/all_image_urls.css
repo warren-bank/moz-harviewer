@@ -1,0 +1,88 @@
+/* **********************************************
+ * the following declares ALL of the image URLs.
+ *
+ * all rules for each distinct image URL
+ * have been aggregated together.
+ *
+ * doing so ensures that the Base64 encoded value
+ * for each image occurs only one time in the
+ * resulting combined/encoded/minified css file.
+ * **********************************************
+ */
+
+.infoTip,
+.pageDescBox .desc {
+	background-image: url(images/tabEnabled.png);
+}
+.opened > .pageCol > .pageName,
+.pageName,
+.isExpandable .netHrefLabel,
+.netRow.opened > .netCol > .netHrefLabel {
+    background-image: url(images/twisty-sprites.png);
+}
+.pageInfoCol,
+.netBlockingBar,
+.netResolvingBar,
+.netConnectingBar,
+.netSendingBar,
+.netWaitingBar,
+.netReceivingBar,
+.fromCache .netReceivingBar,
+.fromCache.netReceivingBar,
+.netInfoCol,
+.tabViewCol {
+    background-image: url(images/timeline-sprites.png);
+}
+.pageBar,
+.pageTimelineCol:hover .pageBar {
+    background-image: url(images/page-timeline.png);
+}
+.pageTimelineBody .connector {
+    background-image: url(images/tooltipConnectorUp.png);
+}
+.popupMenuGroup,
+.popupMenuGroup:hover,
+.popupMenuGroupSelected {
+    background-image: url(images/menu/tabMenuPin.png);
+}
+.popupMenuChecked ,
+.popupMenuChecked:hover {
+    background-image: url(images/menu/tabMenuCheckbox.png);
+}
+.popupMenuRadioSelected,
+.popupMenuRadioSelected:hover {
+    background-image: url(images/menu/tabMenuRadio.png);
+}
+.popupMenuShadow {
+    background-image: url(images/menu/shadowAlpha.png);
+}
+.harSanitizedDownloadButton {
+    background-image: url(images/sanitized-download-sprites.png);
+}
+.harDownloadButton {
+    background-image: url(images/download-sprites.png);
+}
+.harSaveButton {
+    background-image: url(images/save.png);
+}
+.htmlPreviewResizer {
+    background-image: url(images/splitterh.png);
+}
+.netOptionsLabel,
+.toolbarButton.dropDown .arrow,
+.errorOptionsTarget {
+    background-image: url(images/contextMenuTarget.png);
+}
+.netOptionsLabel:hover,
+.errorOptionsTarget:hover {
+    background-image: url(images/contextMenuTargetHover.png);
+}
+.loaded .netTimeBar {
+    background-image: url(images/netBarLoaded.gif);
+}
+.fromCache .netTimeBar {
+    background-image: url(images/netBarCached.gif);
+}
+.toolbarButton.text:hover {
+    background-image: url(images/bg-button.gif);
+}
