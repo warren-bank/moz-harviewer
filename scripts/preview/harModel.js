@@ -158,7 +158,7 @@ HarModel.prototype =
                 entry.response.content.toJSON = contentToUnicode;
         }
 
-        var jsonString = $.jSONToString(this.input, null, "\t");
+        var jsonString = $.jSONToString(input, null, "\t");
         var result = jsonString.replace(/\\\\u/g, "\\u");
         return result;
     },

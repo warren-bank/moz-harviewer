@@ -92,7 +92,7 @@
 
         > omits any doctype declaration
 
-  * [v1.0.0] [__HEAD__](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...libs/harviewer):
+  * [v1.0.0] [998bea6](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...998bea6740e91749f579c5c0b0163cc9594a7964):
     * This commit corresponds to the [tagged release: v1.0.0](https://github.com/warren-bank/moz-harviewer/releases/tag/v1.0.0)
     * updates:
       * `scripts/domplate/infoTip.js` can now properly determine the height of the document when the page is rendered in quirks mode
@@ -100,3 +100,36 @@
         * `demo/css/quirks.css`:
 
           > css rules to correct for styling issues when the page is rendered in quirks mode
+
+  * [__HEAD__](https://github.com/warren-bank/moz-harviewer/compare/375fc2138823cfdb2eaebaf9e36fe8ec63a5b7f8...libs/harviewer):
+    * All earlier modifications in this branch (to the _unmodified/original source_) have been done
+      with the intention of retaining the desired existing functionality while reducing the codebase.
+    * This is the first modification intended to add new/enhanced functionality.
+    * A secondary download button has been added to the toolbar.
+      It differs from the original, in that its behavior is to export/save a _sanitized_ copy of the HAR data.
+    * Exactly what data is filtered/removed from the original can be configured in _user preferences_.
+    * In this initial version, the only filtering options are:
+      * remove cookies:
+        - [ ] whole header
+        - [x] value only
+
+        &nbsp;
+
+        > cookie data is stored in:
+          * log.entries[].request.cookies
+          * log.entries[].request.headers
+          * log.entries[].response.cookies
+          * log.entries[].response.headers
+
+        > &nbsp;
+
+        > The option to remove the _whole header_ removes whole data objects from these arrays. Not only are the cookie values removed (which are the cause for security concern in passing around _unsanitized_ HAR data files), but all trace of their existence is lost as well.
+
+        > The option to remove the _value only_ retains information about cookies that were present during the logged session:
+          * their names
+          * their transmission to/from the server
+
+        > &nbsp;
+
+        > However, within this retained data, the value of the cookies are wiped clean.
+          In all instances, the real value is replaced by an empty string.

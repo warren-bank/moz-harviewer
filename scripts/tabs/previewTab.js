@@ -102,6 +102,12 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
                 className: "harDownloadButton",
                 command: Lib.bindFixed(this.onDownload, this)
             }
+         , {
+                id: "download",
+                tooltiptext: Strings.sanitizedDownloadTooltip,
+                className: "harSanitizedDownloadButton",
+                command: Lib.bindFixed(this.onSanitizedDownload, this)
+            }
         ];
 
         return buttons;
@@ -155,22 +161,91 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
     },
 */
 
-    onDownload: function()
-    {
-		var model, json_data;
+	trigger_har_download: function(sanitize_har){
+		var model, har_data, har_json;
 
 		model		= this.model;
-		json_data	= model ? model.toJSON() : "";
+		har_data	= model ? model.input : false;
 
-		// $("body").empty().text(json_data); return;
+		if (sanitize_har && har_data && har_data.log && har_data.log.entries){
+			if (user_prefs && user_prefs.sanitized_download){
+
+				har_data = jQuery.extend(true, {}, har_data);
+
+				if (user_prefs.sanitized_download.remove_cookies){
+					// www.softwareishard.com/blog/har-12-spec/#cookies
+
+					har_data.log.entries.forEach(function(entry){
+						var cookie_headers = {
+							"request"	: [],
+							"response"	: []
+						};
+
+						// sanity check:
+						if (! entry.request)
+							{ entry.request = {"headers":[], "cookies":[]}; }
+						if (! entry.request.headers)
+							{ entry.request.headers = []; }
+						if (! entry.request.cookies)
+							{ entry.request.cookies = []; }
+						if (! entry.response)
+							{ entry.response = {"headers":[], "cookies":[]}; }
+						if (! entry.response.headers)
+							{ entry.response.headers = []; }
+						if (! entry.response.cookies)
+							{ entry.response.cookies = []; }
+
+						entry.request.headers.forEach(function(header, index){
+							if (header.name.toLowerCase() === 'cookie'){
+								cookie_headers.request.unshift(index);
+							}
+						});
+
+						entry.response.headers.forEach(function(header, index){
+							if (header.name.toLowerCase() === 'set-cookie'){
+								cookie_headers.response.unshift(index);
+							}
+						});
+
+						if (user_prefs.sanitized_download.remove_cookies.whole_header){
+							entry.request.cookies  = [];
+							entry.response.cookies = [];
+
+							// process in descending order
+							cookie_headers.request.forEach(function(index){
+								entry.request.headers.splice(index, 1);
+							});
+							cookie_headers.response.forEach(function(index){
+								entry.response.headers.splice(index, 1);
+							});
+						}
+						else if (user_prefs.sanitized_download.remove_cookies.value_only){
+							entry.request.cookies.forEach(function(cookie){
+								cookie.value = "";
+							});
+							entry.response.cookies.forEach(function(cookie){
+								cookie.value = "";
+							});
+
+							cookie_headers.request.forEach(function(index){
+								entry.request.headers[index].value = "";
+							});
+							cookie_headers.response.forEach(function(index){
+								entry.response.headers[index].value = "";
+							});
+						}
+					});
+				}
+
+			}
+		}
+
+		har_json	= (model && har_data) ? model.toJSON(har_data) : "";
+
+		// $("body").empty().text(har_json); return;
 
 		var Base64, get_filename, uri, downloader;
 
-		// https://developer.mozilla.org/en-US/docs/Web/API/window.btoa#Unicode_Strings
-		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
-		// http://phpjs.org/functions/base64_encode/
-		// http://phpjs.org/functions/base64_decode/
-		// https://raw.githubusercontent.com/kvz/phpjs/master/functions/url/base64_encode.js
 		// http://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript
 		Base64 = (function() {
 			"use strict";
@@ -362,13 +437,21 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 			return fname;
 		};
 
-		uri					= 'data:application/octet-stream;base64,' + Base64.encode(json_data);
+		uri					= 'data:application/octet-stream;base64,' + Base64.encode(har_json);
 		downloader			= document.createElement("a");
 		downloader.href		= uri;
 		downloader.download	= get_filename();
 		document.body.appendChild(downloader);
 		downloader.click();
 		document.body.removeChild(downloader);
+	},
+
+    onDownload: function(){
+		this.trigger_har_download(false);
+    },
+
+    onSanitizedDownload: function(){
+		this.trigger_har_download(true);
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

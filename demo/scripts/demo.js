@@ -1,15 +1,21 @@
 var user_prefs = {
-	"validate_json"		: true,
-	"show_timeline"		: true,
-	"show_stats"		: true,
-	"expand_all_pages"	: false,
-	"expand_first_page"	: true,
-	"request_list"		: {
+	"validate_json"			: true,
+	"show_timeline"			: true,
+	"show_stats"			: true,
+	"expand_all_pages"		: false,
+	"expand_first_page"		: true,
+	"request_list"			: {
 		"visible_columns"		: ["url", "status", "size", "timeline"],
 		"phase_interval"		: 4000
 	},
-	"request_body"		: {
+	"request_body"			: {
 		"html_preview_height"	: 100
+	},
+	"sanitized_download"	: {
+		"remove_cookies"		: {
+			"whole_header"		: false,
+			"value_only"		: true
+		}
 	}
 };
 

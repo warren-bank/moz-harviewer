@@ -1,3 +1,4 @@
+.harSanitizedDownloadButton,
 .harDownloadButton,
 .harSaveButton {
 	display:				inline-block;
@@ -13,9 +14,13 @@
 	-moz-user-focus:		ignore;
 }
 
+.harSanitizedDownloadButton {
+	background-image:		url("images/sanitized-download-sprites.png");
+}
 .harDownloadButton {
 	background-image:		url("images/download-sprites.png");
 }
+.harSanitizedDownloadButton:hover,
 .harDownloadButton:hover {
 	background-position:	0px -16px;;
 }
