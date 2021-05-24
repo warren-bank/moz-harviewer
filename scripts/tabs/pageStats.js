@@ -16,8 +16,8 @@ function(Domplate, Lib, Strings, HarSchema, HarModel, /* Cookies, */ InfoTip, Tr
 //*************************************************************************************************
 // Page Load Statistics
 
-function Pie() {}
-Pie.prototype =
+function BasePie() {}
+BasePie.prototype =
 {
     data: [],
     title: "",
@@ -40,7 +40,7 @@ Pie.prototype =
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 function TimingPie() {};
-TimingPie.prototype = Lib.extend(Pie.prototype,
+TimingPie.prototype = Lib.extend(BasePie.prototype,
 {
     title: "Summary of request times.",
 
@@ -63,7 +63,7 @@ TimingPie.prototype = Lib.extend(Pie.prototype,
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 function ContentPie() {};
-ContentPie.prototype = Lib.extend(Pie.prototype,
+ContentPie.prototype = Lib.extend(BasePie.prototype,
 {
     title: "Summary of content types.",
 
@@ -85,7 +85,7 @@ ContentPie.prototype = Lib.extend(Pie.prototype,
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 function TrafficPie() {};
-TrafficPie.prototype = Lib.extend(Pie.prototype,
+TrafficPie.prototype = Lib.extend(BasePie.prototype,
 {
     title: "Summary of sent and received bodies & headers.",
 
@@ -100,7 +100,7 @@ TrafficPie.prototype = Lib.extend(Pie.prototype,
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 function CachePie() {};
-CachePie.prototype = Lib.extend(Pie.prototype,
+CachePie.prototype = Lib.extend(BasePie.prototype,
 {
     title: "Comparison of downloaded data from the server and browser cache.",
 

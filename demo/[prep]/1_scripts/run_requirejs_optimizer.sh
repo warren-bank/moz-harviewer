@@ -1,19 +1,27 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-# -----------------------------------------------
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-# -----------------------------------------------
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+REQJS="${DIR}/r.js"
+REQJS_native="$REQJS"
+
+case "$(uname -s)" in
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)
+    REQJS_native=$(cygpath -w "$REQJS")
+    ;;
+esac
+
+# download require.js
+#   https://requirejs.org/docs/download.html#rjs
+if [ ! -e "$REQJS" ];then
+  curl --insecure -o "$REQJS_native" "https://requirejs.org/docs/release/2.1.14/r.js"
+fi
 
 # update PATH to include node
-source "$DIR/../env.sh"
+if [ -e "${DIR}/../env.sh" ];then
+  source "${DIR}/../env.sh"
+fi
 
-cd "$DIR/../../../scripts"
+cd "${DIR}/../../../scripts"
 
-node "$DIR/r.js" -o "app.build.js" optimize=none out="../demo/scripts/harViewer.min.js"
+node "$REQJS_native" -o "app.build.js" optimize=none out="../demo/scripts/harViewer.min.js"
