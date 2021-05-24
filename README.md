@@ -86,7 +86,7 @@ Firefox add-on that displays HTTP Archive data in .HAR format
         * the location pathname terminates with the file extension: `.har`
         * the location hash contains: `HTTP-Archive-Viewer`
 
-          > note: If the response is HAR data and the pathname doesn't have a '.har' file extension
+          > note: If the response is HAR data and the pathname doesn't have a `.har` file extension
             (which is common when the data is being retrieved via passing querystring parameters to a backend script),
             then appending this token into the URL hash will short-circuit the final detection test:
 
@@ -99,7 +99,7 @@ Firefox add-on that displays HTTP Archive data in .HAR format
 
 ## Notes:
 
-  * The 'detection methodology' does not currently support JSONP (.harp) responses.
+  * The 'detection methodology' does not currently support JSONP (`.harp`) responses.
     It may be added later if there's interest by users to do so.
 
 ## User Preferences:
@@ -141,9 +141,9 @@ Firefox add-on that displays HTTP Archive data in .HAR format
 
   > URLs to render in-browser after the add-on has been installed, which illustrate its functionality
 
-  * http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=1
+  * [_peixeurbano.com.br_ via _httparchive.webpagetest.org_ via _archive.org_](https://web.archive.org/web/20170626101242if_/http://httparchive.webpagetest.org/export.php?test=120501_QA_10ECT&run=3&cached=0&pretty=1#HTTP-Archive-Viewer)
 
-    > [google.com](http://www.google.com) via [httparchive.org](http://httparchive.org/websites.php)
+    > [more archived `.har` files](https://web.archive.org/web/*/http://httparchive.webpagetest.org/export.php*)
 
     >> * This is the URL displayed in the screenshot (above).
          The server returns HAR-formatted JSON data.
@@ -185,7 +185,7 @@ Firefox add-on that displays HTTP Archive data in .HAR format
          * append some token to the URL request (for the HAR data)
            that can signal to the JSON viewer add-on that it should ignore this page.
 
-    >>     ex: [http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=1#HTTP-Archive-Viewer/No-JSON-DataView](http://httparchive.webpagetest.org/export.php?test=140801_0_8JH&run=1&cached=0&pretty=1#HTTP-Archive-Viewer/No-JSON-DataView)
+    >>     ex: [http://hostname/pathname?search#HTTP-Archive-Viewer/No-JSON-DataView](https://web.archive.org/web/20170626101242if_/http://httparchive.webpagetest.org/export.php?test=120501_QA_10ECT&run=3&cached=0&pretty=1#HTTP-Archive-Viewer/No-JSON-DataView)
 
     >>   * save the data to a file on disk.
            Be sure to give its filename a `.har` extension;
